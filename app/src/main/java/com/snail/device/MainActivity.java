@@ -8,12 +8,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,8 +31,8 @@ import com.snail.antifake.deviceid.emulator.EmuCheckUtil;
 import com.snail.antifake.deviceid.macaddress.IWifiManagerUtil;
 import com.snail.antifake.deviceid.macaddress.MacAddressUtils;
 import com.snail.antifake.jni.EmulatorCheckService;
-import com.snail.antifake.jni.EmulatorDetectUtil;
 import com.snail.antifake.jni.PropertiesGet;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mActivity = this;
-
+        autoTest();
         findViewById(R.id.btn_moni).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 TextView textView = (TextView) findViewById(R.id.btn_sycn_moni);
-                textView.setText(" 是否模拟器 " + EmulatorDetectUtil.isEmulator());
+//                textView.setText(" 是否模拟器 " + EmulatorDetectUtil.isEmulator());
 
             }
         });
@@ -90,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-
                 textView = (TextView) findViewById(R.id.tv_getdeviceid);
                 // 不同的版本不一样，4.3之前ITelephony没有getDeviceId
                 textView.setText("\n 最终方法获取IMEI  \n" + DeviceIdUtil.getDeviceId(mActivity)
@@ -104,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
                         + "\n 真实 ITelephonyUtil反Hook 获取DeviceId\n" + ITelephonyUtil.getDeviceIdLevel0(mActivity)
                         + "\n 真实 ITelephonyUtil反Hook 获取DeviceId level1 \n" + ITelephonyUtil.getDeviceIdLevel1(mActivity)
                         + "\n 自定义ServiceManager获取getDeviceId level2 \n" + ITelephonyUtil.getDeviceIdLevel2(mActivity)
-                        +"\n "+cpuInfo
-                        +"\n "+ PropertiesGet.getString("ro.product.cpu.abi")
+                        + "\n " + cpuInfo
+                        + "\n " + PropertiesGet.getString("ro.product.cpu.abi")
                 );
                 textView = (TextView) findViewById(R.id.tv_all);
 
@@ -153,10 +155,10 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     TextView textView = (TextView) findViewById(R.id.btn_moni);
                     textView.setText(" 是否模拟器 " + IEmulatorCheck.isEmulator());
-                    unbindService(this);
                     IEmulatorCheck.kill();
                 } catch (RemoteException e) {
-                    Toast.makeText(MainActivity.this,"获取进程崩溃",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "获取进程崩溃", Toast.LENGTH_SHORT).show();
+                    Log.v("lishang","crash simulatoe");
                 }
             }
         }
@@ -166,4 +168,16 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void autoTest() {
+        new Handler(Looper.getMainLooper()).post(mRunnable);
+    }
+
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Intent intent = new Intent(MainActivity.this, EmulatorCheckService.class);
+            bindService(intent, serviceConnection, Service.BIND_AUTO_CREATE);
+            new Handler(Looper.getMainLooper()).postDelayed(mRunnable, 1000);
+        }
+    };
 }
