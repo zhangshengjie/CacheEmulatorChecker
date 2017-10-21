@@ -31,6 +31,7 @@ import com.snail.antifake.deviceid.emulator.EmuCheckUtil;
 import com.snail.antifake.deviceid.macaddress.IWifiManagerUtil;
 import com.snail.antifake.deviceid.macaddress.MacAddressUtils;
 import com.snail.antifake.jni.EmulatorCheckService;
+import com.snail.antifake.jni.EmulatorDetectUtil;
 import com.snail.antifake.jni.PropertiesGet;
 
 import java.io.BufferedReader;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                TextView textView = (TextView) findViewById(R.id.btn_sycn_moni);
+//                TextView textView = (TextView) findViewById(R.id.btn_sycn_moni);
 //                textView.setText(" 是否模拟器 " + EmulatorDetectUtil.isEmulator());
 
             }
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             if (IEmulatorCheck != null) {
                 try {
                     TextView textView = (TextView) findViewById(R.id.btn_moni);
-                    textView.setText(" 是否模拟器 " + IEmulatorCheck.isEmulator());
+                    textView.setText(" 是否模拟器 " + IEmulatorCheck.isEmulator()+" "+System.currentTimeMillis());
                     IEmulatorCheck.kill();
                 } catch (RemoteException e) {
                     Toast.makeText(MainActivity.this, "获取进程崩溃", Toast.LENGTH_SHORT).show();
@@ -178,6 +179,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, EmulatorCheckService.class);
             bindService(intent, serviceConnection, Service.BIND_AUTO_CREATE);
             new Handler(Looper.getMainLooper()).postDelayed(mRunnable, 1000);
+
+                 TextView textView = (TextView) findViewById(R.id.btn_sycn_moni);
+            textView.setText(" 是否模拟器  " + EmulatorDetectUtil.isEmulator() +" "+System.currentTimeMillis());
+
         }
     };
 }
