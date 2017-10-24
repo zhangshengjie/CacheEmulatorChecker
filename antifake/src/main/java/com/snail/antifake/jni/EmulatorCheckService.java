@@ -31,13 +31,7 @@ public class EmulatorCheckService extends Service {
             }
             @Override
             public void kill() throws RemoteException {
-                stopSelf();
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                       System.exit(0);
-                    }
-                },500);
+
             }
         };
     }
@@ -46,5 +40,17 @@ public class EmulatorCheckService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.v("lishang","onCreate");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.v("lishang","onDestroy");
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.exit(0);
+            }
+        },500);
     }
 }

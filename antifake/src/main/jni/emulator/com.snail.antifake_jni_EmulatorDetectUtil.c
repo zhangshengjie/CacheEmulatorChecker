@@ -63,23 +63,19 @@ int detect() {
     void *exec = mmap(NULL, (size_t) getpagesize(), PROT, MAP_ANONYMOUS | MAP_PRIVATE, -1,
                       (off_t) 0);
     if (exec == (void *) -1) {
-        LOGI(" mmap faild ");
         int fd = fopen("/dev/zero", "w+");
         exec = mmap(NULL, (size_t) getpagesize(), PROT, MAP_SHARED, fd, (off_t) 0);
-        LOGI(" mmap zero %x %x %x", fd, exec, exec);
         if (exec == (void *) -1) {
             return 10;
         }
     }
     memcpy(exec, code, sizeof(code) + 1);
-    LOGI(" mmap sucess exec  %x", exec);
     asmcheck = (void *) exec;
     asmcheck();
     __asm __volatile (
     "mov %0,r0 \n"
     :"=r"(a)
     );
-    LOGI("a= %d  ", a);
     munmap(exec, getpagesize());
     return a;
 }
@@ -88,7 +84,6 @@ JNIEXPORT jboolean JNICALL Java_com_snail_antifake_jni_EmulatorDetectUtil_detect
         (JNIEnv *env, jobject jobject1) {
     load(env);
     int ret = detect();
-    LOGI("%d detect ", ret);
     return ret != 10;
 }
 

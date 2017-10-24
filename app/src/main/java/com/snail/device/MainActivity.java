@@ -49,13 +49,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mActivity = this;
-        autoTest();
+
         findViewById(R.id.btn_moni).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(MainActivity.this, EmulatorCheckService.class);
-                bindService(intent, serviceConnection, Service.BIND_AUTO_CREATE);
+                autoTest();
 
             }
         });
@@ -64,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                TextView textView = (TextView) findViewById(R.id.btn_sycn_moni);
-//                textView.setText(" 是否模拟器 " + EmulatorDetectUtil.isEmulator());
+                TextView textView = (TextView) findViewById(R.id.btn_sycn_moni);
+                textView.setText(" 是否模拟器 " + EmulatorDetectUtil.isEmulator());
 
             }
         });
@@ -148,26 +147,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    final ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            IEmulatorCheck IEmulatorCheck = com.android.internal.telephony.IEmulatorCheck.Stub.asInterface(service);
-            if (IEmulatorCheck != null) {
-                try {
-                    TextView textView = (TextView) findViewById(R.id.btn_moni);
-                    textView.setText(" 是否模拟器 " + IEmulatorCheck.isEmulator()+" "+System.currentTimeMillis());
-                    IEmulatorCheck.kill();
-                } catch (RemoteException e) {
-                    Toast.makeText(MainActivity.this, "获取进程崩溃", Toast.LENGTH_SHORT).show();
-                    Log.v("lishang","crash simulatoe");
-                }
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    };
 
     private void autoTest() {
         new Handler(Looper.getMainLooper()).post(mRunnable);
@@ -176,13 +155,32 @@ public class MainActivity extends AppCompatActivity {
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            Intent intent = new Intent(MainActivity.this, EmulatorCheckService.class);
-            bindService(intent, serviceConnection, Service.BIND_AUTO_CREATE);
-            new Handler(Looper.getMainLooper()).postDelayed(mRunnable, 1000);
+            Intent intent = new Intent(getApplication(), EmulatorCheckService.class);
+            getApplication().bindService(intent, new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    final IEmulatorCheck IEmulatorCheck = com.android.internal.telephony.IEmulatorCheck.Stub.asInterface(service);
+                    if (IEmulatorCheck != null) {
+                        try {
+                            TextView textView = (TextView) findViewById(R.id.btn_moni);
+                            textView.setText(" 是否模拟器 " + IEmulatorCheck.isEmulator() + " " + System.currentTimeMillis());
+                            getApplication().unbindService(this);
+//                            IEmulatorCheck.kill();
+                        } catch (RemoteException e) {
+                            getApplication().unbindService(this);
+                            Toast.makeText(MainActivity.this, "获取进程崩溃", Toast.LENGTH_SHORT).show();
+                            Log.v("lishang", "crash simulatoe");
+                        }
+                    }
+                }
 
-                 TextView textView = (TextView) findViewById(R.id.btn_sycn_moni);
-            textView.setText(" 是否模拟器  " + EmulatorDetectUtil.isEmulator() +" "+System.currentTimeMillis());
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    Toast.makeText(getApplication(), "onServiceDisconnected", Toast.LENGTH_SHORT).show();
 
+                }
+            }, Service.BIND_AUTO_CREATE);
+            new Handler(Looper.getMainLooper()).postDelayed(mRunnable, 30 * 1000);
         }
     };
 }
