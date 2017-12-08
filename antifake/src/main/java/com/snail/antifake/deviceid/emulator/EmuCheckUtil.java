@@ -32,9 +32,7 @@ public class EmuCheckUtil {
 
         return mayOnEmulatorViaQEMU(context)
                 || isEmulatorViaBuild(context)
-                || isEmulatorFromCpu()
-                || isFakeEmulatorFromIMEI(context)
-                || isEmulatorFromDeviceId(context);
+                || isEmulatorFromCpu();
 
     }
 
@@ -113,7 +111,7 @@ public class EmuCheckUtil {
     public static boolean isEmulatorFromCpu() {
 
         String cpuInfo = ShellAdbUtils.execCommand("cat /proc/cpuinfo",false).successMsg;
-        return TextUtils.isEmpty(cpuInfo) || ((cpuInfo.contains("intel") || cpuInfo.contains("amd")));
+        return !TextUtils.isEmpty(cpuInfo) && ((cpuInfo.contains("intel") || cpuInfo.contains("amd")));
     }
 
 
