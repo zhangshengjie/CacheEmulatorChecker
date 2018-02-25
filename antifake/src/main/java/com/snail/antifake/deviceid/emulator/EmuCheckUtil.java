@@ -110,10 +110,14 @@ public class EmuCheckUtil {
     // 查杀比较严格，放在最后，直接pass x86
     public static boolean isEmulatorFromCpu() {
 
-        String cpuInfo = ShellAdbUtils.execCommand("cat /proc/cpuinfo",false).successMsg;
-        return !TextUtils.isEmpty(cpuInfo) && ((cpuInfo.contains("intel") || cpuInfo.contains("amd")));
+        String cpuInfo=getCpuInfo();
+        return !TextUtils.isEmpty(cpuInfo) && ((cpuInfo.contains("Intel") || cpuInfo.contains("intel") || cpuInfo.contains("amd")));
     }
 
+    public static String getCpuInfo() {
+        ShellAdbUtils.CommandResult commandResult = ShellAdbUtils.execCommand("cat /proc/cpuinfo", false);
+        return commandResult.successMsg;
+    }
 
     //  判断是否存在作假，如果TelephonyManager获取非空，但是底层获取为null，说明直接在上层Hook了
     public static boolean isFakeEmulatorFromIMEI(Context context) {

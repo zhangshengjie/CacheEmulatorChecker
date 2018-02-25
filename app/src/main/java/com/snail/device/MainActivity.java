@@ -1,5 +1,6 @@
 package com.snail.device;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentName;
@@ -22,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.internal.telephony.IEmulatorCheck;
+import com.snail.antifake.deviceid.AndroidDeviceIMEIUtil;
+import com.snail.antifake.deviceid.ShellAdbUtils;
 import com.snail.antifake.deviceid.androidid.IAndroidIdUtil;
 import com.snail.antifake.deviceid.androidid.ISettingUtils;
 import com.snail.antifake.deviceid.deviceid.DeviceIdUtil;
@@ -65,37 +68,26 @@ public class MainActivity extends AppCompatActivity {
 
                 TextView textView = (TextView) findViewById(R.id.btn_sycn_moni);
                 textView.setText(" 是否模拟器 " + EmulatorDetectUtil.isEmulator());
+                chechhoudini();
 
             }
         });
 
 
         findViewById(R.id.btn_dna).setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
                 TextView textView = null;
 
-                String cpuInfo = "";
-                try {
-                    String[] args = {"/system/bin/cat", "/proc/cpuinfo"};
-                    ProcessBuilder cmd = new ProcessBuilder(args);
-                    Process process = cmd.start();
-                    StringBuffer sb = new StringBuffer();
-                    String readLine = "";
-                    BufferedReader responseReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "utf-8"));
-                    while ((readLine = responseReader.readLine()) != null) {
-                        sb.append(readLine);
-                    }
-                    responseReader.close();
-                    cpuInfo = sb.toString().toLowerCase();
-                } catch (IOException ex) {
-                }
+
 
 
                 textView = (TextView) findViewById(R.id.tv_getdeviceid);
                 // 不同的版本不一样，4.3之前ITelephony没有getDeviceId
-                textView.setText("\n 最终方法获取IMEI  \n" + DeviceIdUtil.getDeviceId(mActivity)
+                textView.setText(
+                          "\n 最终方法获取IMEI  \n" + DeviceIdUtil.getDeviceId(mActivity)
                         + "\n最终方法获取MAC地址 \n" + MacAddressUtils.getMacAddress(mActivity)
                         + "\n最终方法获取AndroidID \n" + IAndroidIdUtil.getAndroidId(mActivity)
                         + "\n 是否模拟器  " + EmuCheckUtil.mayOnEmulator(mActivity)
@@ -106,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
                         + "\n 真实 ITelephonyUtil反Hook 获取DeviceId\n" + ITelephonyUtil.getDeviceIdLevel0(mActivity)
                         + "\n 真实 ITelephonyUtil反Hook 获取DeviceId level1 \n" + ITelephonyUtil.getDeviceIdLevel1(mActivity)
                         + "\n 自定义ServiceManager获取getDeviceId level2 \n" + ITelephonyUtil.getDeviceIdLevel2(mActivity)
-                        + "\n " + cpuInfo
+                        + "\n cpuinfo \n " + EmuCheckUtil.getCpuInfo()
+                         +"\n isEmulatorFromCpu "+EmuCheckUtil.isEmulatorFromCpu()
                         + "\n " + PropertiesGet.getString("ro.product.cpu.abi")
                 );
                 textView = (TextView) findViewById(R.id.tv_all);
@@ -183,4 +176,14 @@ public class MainActivity extends AppCompatActivity {
             new Handler(Looper.getMainLooper()).postDelayed(mRunnable, 30 * 1000);
         }
     };
+
+
+    private void chechhoudini(){
+
+        String d=getFilesDir()+"/a.txt";
+        ShellAdbUtils.CommandResult commandResult= ShellAdbUtils.execCommand("logcat  -f " +d+"| busybox grep houdini ",false);
+        Log.v("lishang", "commandResult.successMsg " +commandResult.successMsg);
+
+
+    }
 }

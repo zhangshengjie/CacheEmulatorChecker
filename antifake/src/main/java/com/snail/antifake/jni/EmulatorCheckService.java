@@ -49,6 +49,7 @@ public class EmulatorCheckService extends Service {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                Log.v("lishang","kill self");
                 System.exit(0);
             }
         },500);
