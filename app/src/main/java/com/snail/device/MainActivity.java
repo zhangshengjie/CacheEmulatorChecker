@@ -52,7 +52,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_asyn_moni).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                testIfSimulator();
+                for(int i=0;i<10;i++){
+                    testIfSimulator();
+                }
             }
         });
 
@@ -126,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
                 if (IEmulatorCheck != null) {
                     try {
                         TextView textView = (TextView) findViewById(R.id.btn_asyn_moni);
-                        textView.setText(" 是否模拟器 " + IEmulatorCheck.isEmulator() + " " + System.currentTimeMillis());
+                        boolean ret=IEmulatorCheck.isEmulator();
+                        textView.setText(" 是否模拟器 " + ret + " " + System.currentTimeMillis());
+                        Log.v("isEmulator", " "+ret);
                         getApplication().unbindService(this);
                     } catch (RemoteException e) {
                         getApplication().unbindService(this);

@@ -124,12 +124,12 @@ JNIEXPORT jboolean JNICALL Java_com_snail_antifake_jni_EmulatorDetectUtil_detect
 //    8410:       e1a0800f        mov     r8, pc
 //    8414:       e3a04000        mov     r4, #0
 //    8418:       e2877001        add     r7, r7, #1
-//    841c:       e5985000        ldr     r5, [r8]
+//    841c:       e5985000        ldr     r5, [r8]//三级流水 r5中存放  add     r7, r7, #1
 
 //8420<code:>
 
 //    8420:       e2844001        add     r4, r4, #1
-//    8424:       e1a0800f        mov     r8, pc
+//    8424:       e1a0800f        mov     r8, pc  //三级流水 执行到这里的时候已经多了3条
 //    8428:       e248800c        sub     r8, r8, #12
 //    842c:       e5885000        str     r5, [r8]
 //    8434:       e354000a        cmp     r4, #10
