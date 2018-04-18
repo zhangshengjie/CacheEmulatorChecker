@@ -44,7 +44,8 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
 
                 TextView textView = (TextView) findViewById(R.id.btn_sycn_moni);
-                textView.setText(" 是否模拟器 " + EmulatorDetectUtil.isEmulator());
+                for(int i=0;i<10;i++){
+                textView.setText(" 是否模拟器 " + EmulatorDetectUtil.isEmulator());}
 
             }
         });
