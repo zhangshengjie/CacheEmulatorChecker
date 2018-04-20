@@ -75,10 +75,10 @@ JNIEXPORT jboolean JNICALL Java_com_snail_device_jni_EmulatorDetectUtil_detect
      //32位的也会有这个问题，为甚
 
     clearcache(exec,exec+4096);
-     for(int i=0;i<4096;i++){
-         LOGI("%x",*(((int *)exec)+i));
-       }
-
+     //for(int i=0;i<4096;i++){
+      //   LOGI("%x",*(((int *)exec)+i));
+     //  }
+LOGI("");LOGI("");LOGI("");LOGI("");LOGI("");LOGI("");LOGI("");LOGI("");
     asmcheck = (int *) exec;
     int ret=-1;
     ret= asmcheck();
