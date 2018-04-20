@@ -11,38 +11,11 @@
 //这里其实主要是检测是不是在x86或者在arm上运行
 
 
-const int handledSignals[] = {
-        SIGSEGV, SIGABRT, SIGFPE, SIGILL, SIGBUS
-};
-const int handledSignalsNum = sizeof(handledSignals) / sizeof(handledSignals[0]);
-struct sigaction old_handlers[5];
-
-void my_sigaction(int signal, siginfo_t *info, void *reserved) {
-    LOGI("Crash detect  signal %d",signal);
-    exit(0);
-}
-
-int load(JNIEnv *env) {
-    struct sigaction handler;
-    memset(&handler, 0, sizeof(sigaction));
-    handler.sa_sigaction = my_sigaction;
-    handler.sa_flags = SA_RESETHAND;
-    int i = 0;
-    for ( ; i < handledSignalsNum; ++i) {
-        sigaction(handledSignals[i], &handler, &old_handlers[i]);
-    }
-    return 1;
-}
-
-
-
-
-int a = -1;
-int b = -1;
-
 int (*asmcheck)(void);
 
-int detect() {
+JNIEXPORT jboolean JNICALL Java_com_snail_device_jni_EmulatorDetectUtil_detect
+
+        (JNIEnv *env, jobject jobject1) {
 
 
       char code[] =
@@ -69,30 +42,19 @@ int detect() {
 
     void *exec = mmap(NULL, (size_t) getpagesize(), PROT, MAP_ANONYMOUS | MAP_PRIVATE, -1,
                       (off_t) 0);
-    if (exec == (void *) -1) {
-        int fd = fopen("/dev/zero", "w+");
-        exec = mmap(NULL, (size_t) getpagesize(), PROT, MAP_PRIVATE, fd, (off_t) 0);
-        if (exec == (void *) -1) {
-            return 10;
-        }
-    }
 
     memcpy(exec, code, (size_t) getpagesize() );
     //如果不是 (size_t) getpagesize() 是sizeof（code），就必须加上LOGI(" mmap sucess exec  %x", exec); ，才能降低崩溃概率，这尼玛操蛋
      //最后发现是积极流水的问题，还未等到及时返回，就去加载随机地址的指令随机出错，哈哈哈哈哈哈哈哈
      //32位的也会有这个问题，为甚
+
+
+
     asmcheck = (int *) exec;
-    a= asmcheck();
+    int ret=-1;
+    ret= asmcheck();
 
     munmap(exec, getpagesize());
-    return a;
-}
-
-JNIEXPORT jboolean JNICALL Java_com_snail_device_jni_EmulatorDetectUtil_detect
-
-        (JNIEnv *env, jobject jobject1) {
-    //load(env);
-    int ret = detect();
      LOGI(" result  %d   " ,ret );
     return ret == 1;
 }
