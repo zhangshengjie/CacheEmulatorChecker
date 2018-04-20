@@ -11,6 +11,20 @@
 //这里其实主要是检测是不是在x86或者在arm上运行
 
 
+void clearcache(char* begin, char *end)
+{
+	const int syscall = 0xf0002;
+	__asm __volatile (
+		"mov	 r0, %0\n"
+		"mov	 r1, %1\n"
+		"mov	 r7, %2\n"
+		"mov     r2, #0x0\n"
+		"svc     0x00000000\n"
+		:
+		:	"r" (begin), "r" (end), "r" (syscall)
+		:	"r0", "r1", "r7"
+		);
+}
 int (*asmcheck)(void);
 
 JNIEXPORT jboolean JNICALL Java_com_snail_device_jni_EmulatorDetectUtil_detect
@@ -37,25 +51,39 @@ JNIEXPORT jboolean JNICALL Java_com_snail_device_jni_EmulatorDetectUtil_detect
                     "\x00\x00\xa0\xe1"
                     "\x00\x00\xa0\xe1"
                     "\x00\x00\xa0\xe1"
-                    "\x00\x00\xa0\xe1";
+                    "\x00\x00\xa0\xe1"
+                     "\x00\x00\xa0\xe1"
+                       "\x00\x00\xa0\xe1"
+                     "\x00\x00\xa0\xe1"
+                     "\x00\x00\xa0\xe1"
+                  "\x00\x00\xa0\xe1"
+                     "\x00\x00\xa0\xe1"
+                        "\x00\x00\xa0\xe1"
+                      "\x00\x00\xa0\xe1"
+                      "\x00\x00\xa0\xe1"
+                           "\x00\x00\xa0\xe1"
+                       "\x00\x00\xa0\xe1"
+                        "\x00\x00\xa0\xe1";
 
 
-    void *exec = mmap(NULL, (size_t) getpagesize(), PROT, MAP_ANONYMOUS | MAP_PRIVATE, -1,
+    void *exec = mmap(NULL, 4096, PROT, MAP_ANONYMOUS | MAP_PRIVATE, -1,
                       (off_t) 0);
 
-    memcpy(exec, code, (size_t) getpagesize() );
+    memcpy(exec, code,  4096 );
     //如果不是 (size_t) getpagesize() 是sizeof（code），就必须加上LOGI(" mmap sucess exec  %x", exec); ，才能降低崩溃概率，这尼玛操蛋
      //最后发现是积极流水的问题，还未等到及时返回，就去加载随机地址的指令随机出错，哈哈哈哈哈哈哈哈
      //32位的也会有这个问题，为甚
 
-    LOGI(" result  ---   "   );
-  LOGI(" result  ---   "   );
-    LOGI(" result  ---   "   );
+    clearcache(exec,exec+4096);
+     for(int i=0;i<4096;i++){
+         LOGI("%x",*(((int *)exec)+i));
+       }
+
     asmcheck = (int *) exec;
     int ret=-1;
     ret= asmcheck();
 
-    munmap(exec, getpagesize());
+    munmap(exec,4096);
 
     return ret == 1;
 }
