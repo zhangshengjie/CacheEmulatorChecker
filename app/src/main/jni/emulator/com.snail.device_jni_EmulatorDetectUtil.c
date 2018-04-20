@@ -48,13 +48,14 @@ JNIEXPORT jboolean JNICALL Java_com_snail_device_jni_EmulatorDetectUtil_detect
      //最后发现是积极流水的问题，还未等到及时返回，就去加载随机地址的指令随机出错，哈哈哈哈哈哈哈哈
      //32位的也会有这个问题，为甚
 
-
-
+    LOGI(" result  ---   "   );
+  LOGI(" result  ---   "   );
+    LOGI(" result  ---   "   );
     asmcheck = (int *) exec;
     int ret=-1;
     ret= asmcheck();
 
     munmap(exec, getpagesize());
-     LOGI(" result  %d   " ,ret );
+
     return ret == 1;
 }
