@@ -6,6 +6,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.snail.antifake.deviceid.ShellAdbUtils;
 
@@ -43,7 +44,9 @@ public class MacAddressUtils {
 
     public static String getMacInfoByAdb() {
         ShellAdbUtils.CommandResult commandResult = ShellAdbUtils.execCommand("cat /sys/class/net/wlan0/address", false);
-        return commandResult.successMsg;
+        String a1 = commandResult.successMsg;
+        Log.e("debug-48","mac:"+a1);
+        return a1;
     }
 
     private static String getProp(Context context, String property) {
@@ -91,6 +94,7 @@ public class MacAddressUtils {
                 buf.deleteCharAt(buf.length() - 1);
             }
             String mac = buf.toString();
+            Log.e("debug-97","MAC:"+mac);
             return mac;
         }
         return "";

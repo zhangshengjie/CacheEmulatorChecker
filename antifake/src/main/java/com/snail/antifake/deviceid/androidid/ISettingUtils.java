@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.IBinder;
 import android.os.Process;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -27,7 +28,9 @@ public class ISettingUtils {
             Class mSecure = Class.forName("android.provider.Settings$Secure");
             Method getString = mSecure.getDeclaredMethod("getStringForUser", ContentResolver.class, String.class, int.class);
             getString.setAccessible(true);
-            return (String) getString.invoke(null, context.getContentResolver(), name, uid);
+            String androidid = (String) getString.invoke(null, context.getContentResolver(), name, uid);
+            Log.e("debug-32", "androidId -> " + androidid);
+            return androidid;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,7 +80,9 @@ public class ISettingUtils {
                 Class mSecure = Class.forName("android.provider.Global");
                 Method getStringForUser = mSecure.getDeclaredMethod("getStringForUser", ContentResolver.class, String.class, int.class);
                 getStringForUser.setAccessible(true);
-                return (String) getStringForUser.invoke(null, resolver, name, uid);
+                String androidid = (String) getStringForUser.invoke(null, resolver, name, uid);
+                Log.e("debug-84", "androidId -> " + androidid);
+                return androidid;
             } else if ((MOVED_TO_LOCK_SETTINGS.contains(name))) {
                 Class ServiceManager = Class.forName("android.os.ServiceManager");
                 Method getService = ServiceManager.getDeclaredMethod("getService");
@@ -92,7 +97,9 @@ public class ISettingUtils {
                     if (binderProxy != null && !sIsSystemProcess) {
                         Class proxy = binderProxy.getClass();
                         Method getString = proxy.getDeclaredMethod("getString", String.class, String.class, int.class);
-                        return (String) getString.invoke(name, "0", uid);
+                        String androidid = (String) getString.invoke(name, "0", uid);
+                        Log.e("debug-101", "androidId -> " + androidid);
+                        return androidid;
                     }
                 }
             }
@@ -102,7 +109,9 @@ public class ISettingUtils {
             Object sNameValueCache = field.get(null);
             Class NameValueCache = sNameValueCache.getClass();
             Method getStringForUser = NameValueCache.getDeclaredMethod("getStringForUser", ContentResolver.class, String.class, int.class);
-            return (String) getStringForUser.invoke(sNameValueCache, resolver, name, uid);
+            String androidid = (String) getStringForUser.invoke(sNameValueCache, resolver, name, uid);
+            Log.e("debug-113", "androidId -> " + androidid);
+            return androidid;
         } catch (Exception e) {
             e.printStackTrace();
         }

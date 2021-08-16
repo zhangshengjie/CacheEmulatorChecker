@@ -63,45 +63,52 @@ public class MainActivity extends AppCompatActivity {
                             0);
                     return;
                 }
-                Log.e("debug-66",
-                        "\n 最终方法获取IMEI  \n" + DeviceIdUtil.getDeviceId(mActivity)
-                                + "\n最终方法获取MAC地址 \n" + MacAddressUtils.getMacAddress(mActivity)
-                                + "\n最终方法获取AndroidID \n" + IAndroidIdUtil.getAndroidId(mActivity)
-                                + "\n 是否模拟器  " + EmuCheckUtil.mayOnEmulator(mActivity)
-                                + " \n\n可Hook系统API获取Deviceid\n" + ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId()
-                                + "\n 真实 反Hook Proxy代理获取Deviceid \n" + IPhoneSubInfoUtil.getDeviceIdLevel0(mActivity)
-                                + "\n真实 反Hook Proxy代理获取Deviceid level1\n" + IPhoneSubInfoUtil.getDeviceIdLevel1(mActivity)
-                                + "\n真实 反Hook Proxy代理获取Deviceid level2\n" + IPhoneSubInfoUtil.getDeviceIdLevel2(mActivity)
-                                + "\n 真实 ITelephonyUtil反Hook 获取DeviceId\n" + ITelephonyUtil.getDeviceIdLevel0(mActivity)
-                                + "\n 真实 ITelephonyUtil反Hook 获取DeviceId level1 \n" + ITelephonyUtil.getDeviceIdLevel1(mActivity)
-                                + "\n 自定义ServiceManager获取getDeviceId level2 \n" + ITelephonyUtil.getDeviceIdLevel2(mActivity)
-                                + "\n " + EmuCheckUtil.getCpuInfo()
-                                + "\n " + PropertiesGet.getString("ro.product.cpu.abi")
-                                + "\n 获取链接的路由器地址" + MacAddressUtils.getConnectedWifiMacAddress(getApplication())
-                );
+                if (true) {
+                    Log.e("debug-66",
+                            "\n 最终方法获取IMEI  \n" + DeviceIdUtil.getDeviceId(mActivity)
+                                    + "\n最终方法获取MAC地址 \n" + MacAddressUtils.getMacAddress(mActivity)
+                                    + "\n最终方法获取AndroidID \n" + IAndroidIdUtil.getAndroidId(mActivity)
+                                    + "\n 是否模拟器  " + EmuCheckUtil.mayOnEmulator(mActivity)
+                                    + " \n\n可Hook系统API获取Deviceid\n" + ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId()
+                                    + "\n 真实 反Hook Proxy代理获取Deviceid \n" + IPhoneSubInfoUtil.getDeviceIdLevel0(mActivity)
+                                    + "\n真实 反Hook Proxy代理获取Deviceid level1\n" + IPhoneSubInfoUtil.getDeviceIdLevel1(mActivity)
+                                    + "\n真实 反Hook Proxy代理获取Deviceid level2\n" + IPhoneSubInfoUtil.getDeviceIdLevel2(mActivity)
+                                    + "\n 真实 ITelephonyUtil反Hook 获取DeviceId\n" + ITelephonyUtil.getDeviceIdLevel0(mActivity)
+                                    + "\n 真实 ITelephonyUtil反Hook 获取DeviceId level1 \n" + ITelephonyUtil.getDeviceIdLevel1(mActivity)
+                                    + "\n 自定义ServiceManager获取getDeviceId level2 \n" + ITelephonyUtil.getDeviceIdLevel2(mActivity)
+                                    + "\n " + EmuCheckUtil.getCpuInfo()
+                                    + "\n " + PropertiesGet.getString("ro.product.cpu.abi")
+                                    + "\n 获取链接的路由器地址" + MacAddressUtils.getConnectedWifiMacAddress(getApplication())
+                    );
+
+                }
 
 
-                Log.e("debug-84", "系统API反射获取序列号\n" + SysAPIUtil.getSerialNumber(mActivity)
-                        + "\n系统API反射获取序列号\n" + SysAPIUtil.getJavaSerialNumber(mActivity)
-                        + "\n 直接通过 Build Serial " + Build.SERIAL
-                        + "\n 通过ADB Build Serial " + AndroidDeviceIMEIUtil.getSerialno()
-                        + "\n 直接native获取  Serial " + PropertiesGet.getString("ro.serialno")
-                        + "\n 通过系统API获取MAC地址 \n" + SysAPIUtil.getMacAddress(mActivity)
-                        + "\n Iwifmanager 获取mac level 0 \n" + IWifiManagerUtil.getMacAddress(mActivity)
-                        + "\n 通过NetworkInterface获取MAC地址 \n" + MacAddressUtils.getMacAddressByWlan0(mActivity)
-                        + "\n 系统API获取手机型号 （作假） \n" + SysAPIUtil.getPhoneManufacturer()
-                        //Settings.Secure.ANDROID_ID Java类可以被HOOK 并且很简单
-                        + "\n\n通过系统API获取ANDROID_ID (XPOSED可以HOOK) \n " + SysAPIUtil.getAndroidId(mActivity)
-                        + "\n 反射获取系统 ANDROID_IDISettingUtils \n" + ISettingUtils.getAndroidProperty(mActivity, Settings.Secure.ANDROID_ID)
-                        + "\n 反射获取系统 ANDROID_ID ISettingUtils level2 \n" + ISettingUtils.getAndroidPropertyLevel1(mActivity, Settings.Secure.ANDROID_ID)
-                        + "\n native ro.product.manufacturer" + PropertiesGet.getString("ro.product.manufacturer")
-                        + "\n native ro.product.model  " + PropertiesGet.getString("ro.product.model")
-                        + "\n native ro.product.device " + PropertiesGet.getString("ro.product.device")
-                        + "\n native ro.kernel.qemu " + PropertiesGet.getString("ro.kernel.qemu")
-                        + "\n native ro.product.name" + PropertiesGet.getString("ro.product.name")
+                if (true) {
+                    Log.e("debug-84", "系统API反射获取序列号\n" + SysAPIUtil.getSerialNumber(mActivity)
+                            + "\n系统API反射获取序列号\n" + SysAPIUtil.getJavaSerialNumber(mActivity)
+                            + "\n 直接通过 Build Serial " + Build.SERIAL
+                            + "\n 通过ADB Build Serial " + AndroidDeviceIMEIUtil.getSerialno()
+                            + "\n 直接native获取  Serial " + PropertiesGet.getString("ro.serialno")
+                            + "\n 通过系统API获取MAC地址 \n" + SysAPIUtil.getMacAddress(mActivity)
+                            + "\n Iwifmanager 获取mac level 0 \n" + IWifiManagerUtil.getMacAddress(mActivity)
+                            + "\n 通过NetworkInterface获取MAC地址 \n" + MacAddressUtils.getMacAddressByWlan0(mActivity)
+                            + "\n 系统API获取手机型号 （作假） \n" + SysAPIUtil.getPhoneManufacturer()
+                            //Settings.Secure.ANDROID_ID Java类可以被HOOK 并且很简单
+                            + "\n\n通过系统API获取ANDROID_ID (XPOSED可以HOOK) \n " + SysAPIUtil.getAndroidId(mActivity)
+                            + "\n 反射获取系统 ANDROID_IDISettingUtils \n" + ISettingUtils.getAndroidProperty(mActivity, Settings.Secure.ANDROID_ID)
+                            + "\n 反射获取系统 ANDROID_ID ISettingUtils level2 \n" + ISettingUtils.getAndroidPropertyLevel1(mActivity, Settings.Secure.ANDROID_ID)
+                            + "\n native ro.product.manufacturer" + PropertiesGet.getString("ro.product.manufacturer")
+                            + "\n native ro.product.model  " + PropertiesGet.getString("ro.product.model")
+                            + "\n native ro.product.device " + PropertiesGet.getString("ro.product.device")
+                            + "\n native ro.kernel.qemu " + PropertiesGet.getString("ro.kernel.qemu")
+                            + "\n native ro.product.name" + PropertiesGet.getString("ro.product.name")
+
+                    );
+                }
 
 
-                );
+
                 if (false) {
                     AndroidDeviceIMEIUtil.getMac(new IpScanner.OnScanListener() {
                         @Override

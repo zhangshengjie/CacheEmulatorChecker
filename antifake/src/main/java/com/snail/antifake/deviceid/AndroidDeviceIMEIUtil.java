@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.snail.antifake.deviceid.androidid.IAndroidIdUtil;
 import com.snail.antifake.deviceid.deviceid.DeviceIdUtil;
@@ -87,7 +88,9 @@ public class AndroidDeviceIMEIUtil {
 
 
     public static String getCpuAbi() {
-        return PropertiesGet.getString("ro.product.cpu.abi");
+        String abi = PropertiesGet.getString("ro.product.cpu.abi");
+        Log.e("debug-91",abi);
+        return abi;
     }
 
 

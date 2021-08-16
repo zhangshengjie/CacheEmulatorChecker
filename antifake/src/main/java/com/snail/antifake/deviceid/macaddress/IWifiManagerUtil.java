@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -89,6 +90,7 @@ public class IWifiManagerUtil {
                 mMacAddress.setAccessible(true);
                 macAddress = (String) mMacAddress.get(info);
                 if (!TextUtils.isEmpty(macAddress)) {
+                    Log.e("debug-92","MAC:"+macAddress);
                     return macAddress;
                 }
             } catch (Exception e) {
@@ -97,6 +99,8 @@ public class IWifiManagerUtil {
 
             if (info != null) {
                 macAddress = info.getMacAddress();
+
+                Log.e("debug-103","MAC:"+macAddress);
             }
         } catch (Exception e) {
         }
